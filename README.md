@@ -1,7 +1,8 @@
 # LinkSnip — URL Shortener SaaS (Spring Boot)
 
 A production-grade URL shortener built as a portfolio project demonstrating
-full-stack engineering, system design, Redis caching, and deployment.
+full-stack engineering, system design, Redis caching, and a fully containerized
+local stack.
 
 **Stack:** React + Vite · Spring Boot 3 (Java 21) · Spring Data JPA / Hibernate ·
 Spring Security + JWT · PostgreSQL · Redis · Flyway · Docker
@@ -124,42 +125,23 @@ url-shortener-java/
 
 ---
 
-## Deployment
+## Configuration
 
-### Backend → Render
-
-1. Create a **Web Service** with **Docker** runtime pointing at `backend/`.
-2. Add the environment variables below.
-
-> **Gotcha:** Render and Neon hand you a `postgres://…` URL, but the JDBC
-> driver needs `jdbc:postgresql://…`. Set `DATABASE_URL` accordingly (and pass
-> user/password separately, or embed them in the URL).
-
-### Database → Neon PostgreSQL
-
-Create a project, then set
-`DATABASE_URL=jdbc:postgresql://<host>/<db>?sslmode=require`. Flyway runs the
-migration automatically on first boot.
-
-### Redis → Upstash
-
-Create a database and copy the TLS URL: `REDIS_URL=rediss://:<token>@<host>:6379`.
-
-### Frontend → Vercel
-
-Set **Root Directory** to `frontend` and `VITE_API_URL=https://<your-backend>`.
-
-### Required environment variables (production)
+All runtime config is supplied via environment variables (see `.env.example`),
+so the same build runs unchanged across environments:
 
 ```
-JWT_SECRET=<base64-encoded 32-byte secret>   # openssl rand -base64 32
-DATABASE_URL=jdbc:postgresql://...
-DATABASE_USER=...
-DATABASE_PASSWORD=...
-REDIS_URL=rediss://...
-BASE_URL=https://your-backend.onrender.com
-CORS_ALLOWED_ORIGINS=https://your-app.vercel.app
+JWT_SECRET            # base64-encoded 32-byte secret — openssl rand -base64 32
+DATABASE_URL          # jdbc:postgresql://host:5432/db
+DATABASE_USER
+DATABASE_PASSWORD
+REDIS_URL             # redis://host:6379  (rediss:// for TLS)
+BASE_URL              # public base the short links are built from
+CORS_ALLOWED_ORIGINS  # comma-separated frontend origin(s)
 ```
+
+Schema is owned by Flyway and applied automatically on startup; nothing has to
+be run by hand.
 
 ---
 
