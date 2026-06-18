@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:linksnip;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop      # tests let Hibernate build the schema
+    database-platform: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false               # Flyway migrations are Postgres-specific
+  data:
+    redis:
+      url: redis://localhost:6379
+
+app:
+  base-url: http://localhost:8080
+  cors:
+    allowed-origins: http://localhost:5173
+  jwt:
+    secret: Y2hhbmdlLW1lLXRoaXMtaXMtYS1kZXYtb25seS1zZWNyZXQtMzJieXRlcyE=
+    access-ttl-minutes: 15
+    refresh-ttl-days: 7
+  shortcode:
+    length: 7
+    max-retries: 5
+  ratelimit:
+    url-create-per-hour: 20
+    redirect-per-minute: 200
+    login-per-minute: 10
