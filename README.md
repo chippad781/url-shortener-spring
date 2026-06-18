@@ -145,7 +145,7 @@ be run by hand.
 
 ---
 
-## Architecture decisions (interview talking points)
+## Architecture decisions
 
 ### Layered architecture & a thin controller boundary
 
